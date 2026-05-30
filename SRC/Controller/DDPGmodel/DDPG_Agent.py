@@ -15,12 +15,6 @@ import torch
 print("NumPy version:", numpy.__version__)
 print("PyTorch built with NumPy:", torch.__config__.show())
 
-# from ..support.lib_config import CustomLogger
-
-# Optional logger
-from SRC.support.lib_config import CustomLogger
-
-
 # ---------------------------
 # Small MLP helper
 # ---------------------------

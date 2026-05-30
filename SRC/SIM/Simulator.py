@@ -2,17 +2,14 @@ import numpy as np
 import datetime as dt
 import pandas as pd
 
-from SRC.SIM.ESS.ess_handler import ESSHandler
-from SRC.SIM.EV.ev_handler import EVHandler
-from SRC.SIM.Thermal.thermal_handler import ThermalHandler
-# from SRC.SIM.Weather.epwHandler import EPWWeatherHandler
-# from SRC.SIM.Weather.epwhandler_V_1_0_2 import EPWWeatherHandler
-from SRC.SIM.Weather.epwhandler_V_1_0_3 import EPWWeatherHandler
-from SRC.SIM.Tariff.tariffHandler_V_2 import tariffHandler
-from SRC.SIM.DataGenerator.data_generators import PatternGenerationHandler
-from SRC.support.lib_config import CustomLogger
-
-from SRC.SIM.EquipmentClass import InverterModel, EVModel, MeterModel, HVACModel
+from SIM.ESS.ess_handler import ESSHandler
+from SIM.EV.ev_handler import EVHandler
+from SIM.Thermal.thermal_handler import ThermalHandler
+from SIM.Weather.epwhandler_V_1_0_3 import EPWWeatherHandler
+from SIM.Tariff.tariffHandler_V_2 import tariffHandler
+from SIM.DataGenerator.data_generators import PatternGenerationHandler
+from support.lib_config import CustomLogger
+from SIM.EquipmentClass import InverterModel, EVModel, MeterModel, HVACModel
 
 np.set_printoptions(suppress=True, precision=2)
 

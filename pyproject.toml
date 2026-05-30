@@ -9,7 +9,7 @@ description = "Dwelling energy simulator"
 authors = [
     {name = "Yaju Rajbhandari"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 
 [tool.setuptools.packages.find]
 where = ["src"]

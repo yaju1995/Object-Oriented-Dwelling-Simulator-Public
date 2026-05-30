@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
-from SRC.support.lib_config import CustomLogger
+from support.lib_config import CustomLogger
 
 logger = CustomLogger(command=True, color='yellow')
 

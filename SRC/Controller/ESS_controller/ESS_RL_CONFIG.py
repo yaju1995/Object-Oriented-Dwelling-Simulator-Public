@@ -1,5 +1,5 @@
-from SRC.Controller.DDPGmodel.bounded_DDPG_Agent_multistep import DDPGConfig
-from SRC.Controller.DDPGmodel.bounded_DDPG_Agent_multistep import Bound_DDPGAgent
+from Controller.DDPGmodel.bounded_DDPG_Agent_multistep import DDPGConfig
+from Controller.DDPGmodel.bounded_DDPG_Agent_multistep import Bound_DDPGAgent
 from torch import nn
 
 ESS_DDPG_config = DDPGConfig()

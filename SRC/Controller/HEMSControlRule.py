@@ -1,31 +1,27 @@
 import pandas as pd
 from datetime import timedelta
-from torch import nn
-
-from SRC.SIM.Tariff.tariffHandler import tariffHandler
-from SRC.SIM.EquipmentClass import InverterModel, EVModel, HVACModel, MeterModel
-from SRC.SIM.ControlSignalHandler import ControlSignal
-from SRC.Controller.Database.PandasDatabase import DataStore
-from .Constants import COLUMNS_KEYS
-# from SRC.SIM.Simulator_Config.config_list import (ev_config, battery_config)
-
-
-from SRC.support.lib_config import CustomLogger
 import os
+
+from SIM.Tariff.tariffHandler import tariffHandler
+from SIM.EquipmentClass import InverterModel, EVModel, HVACModel, MeterModel
+from SIM.ControlSignalHandler import ControlSignal
+from Controller.Database.PandasDatabase import DataStore
+from Controller.Constants import COLUMNS_KEYS
+from support.lib_config import CustomLogger
 
 logger = CustomLogger(command=True)
 
 # EV Import and Definition ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Rule based ~~~~~~~~~
-from SRC.Controller.EV_controller.evRuleControlLib import evController
+# Rule based EV controller
+from Controller.EV_controller.evRuleControlLib import evController
 
 # ESS Import and definition ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Rule based controller ~~~~~~~~~~~~~~~~
-from SRC.Controller.ESS_controller.ESSRuleControlLib import essController
+# Rule based ESS controller
+from Controller.ESS_controller.essRuleControlLib import essController
 
 # HVAC Import and definition ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Rule based controller ~~~~~~~~~~~~~~~~
-from SRC.Controller.HVAC_controller.hvacRuleControlLib import hvacController
+# Rule based HVAC controller
+from Controller.HVAC_controller.hvacRuleControlLib import hvacController
 
 
 # Currently direct definition for early training and testing

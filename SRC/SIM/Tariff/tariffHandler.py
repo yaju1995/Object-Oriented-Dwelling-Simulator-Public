@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, time as dtime
 from typing import Optional
-from SRC.support.lib_config import CustomLogger
-from SRC.SIM.Tariff.TariffGenerator import BaseTariffGenerator
+from support.lib_config import CustomLogger
+from SIM.Tariff.TariffGenerator import BaseTariffGenerator
 
 logger = CustomLogger(command=True)
 

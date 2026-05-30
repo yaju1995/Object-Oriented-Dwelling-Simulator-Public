@@ -1,35 +1,33 @@
 import pandas as pd
 from datetime import timedelta, datetime, time
-from torch import nn
 
-from SRC.SIM.Tariff.tariffHandler import tariffHandler
-from SRC.SIM.EquipmentClass import InverterModel, EVModel, HVACModel, MeterModel
-from SRC.SIM.ControlSignalHandler import ControlSignal
-from SRC.Controller.Database.PandasDatabase import DataStore
-from .Constants import COLUMNS_KEYS
+from SIM.Tariff.tariffHandler import tariffHandler
+from SIM.EquipmentClass import InverterModel, EVModel, HVACModel, MeterModel
+from SIM.ControlSignalHandler import ControlSignal
+from Controller.Database.PandasDatabase import DataStore
+from Controller.Constants import COLUMNS_KEYS
+from support.lib_config import CustomLogger
 
-from SRC.support.lib_config import CustomLogger
 import os
 
 logger = CustomLogger(command=True)
 
-# RL based ~~~~~~~
-from SRC.Controller.EV_controller.evControlLib_General import evController
-from .EV_controller.EV_RL_CONFIG import (EV_RL_AGENT, EV_LOOK_AHEAD,
+# RL based EV controller import
+from Controller.EV_controller.evControlLib_General import evController
+from Controller.EV_controller.EV_RL_CONFIG import (EV_RL_AGENT, EV_LOOK_AHEAD,
                                          EV_INPUT_DIM, EV_OUT_DIM, EV_MODEL_DIR,
                                          EV_MODEL_NAME)
 
-# RL agent based controller ~~~~~~~~~~~~~~~~
-from .ESS_controller.ESS_RL_CONFIG import (ESS_RL_AGENT, ESS_LOOK_AHEAD,
+# RL agent ESS controller import
+from Controller.ESS_controller.ESS_RL_CONFIG import (ESS_RL_AGENT, ESS_LOOK_AHEAD,
                                            ESS_INPUT_DIM, ESS_OUT_DIM,
                                            ESS_MODEL_NAME, ESS_MODEL_DIR)
-from SRC.Controller.ESS_controller.essRLControlLib import essController
-# from SRC.Controller.ESS_controller.essRLControlLib_oldFW import essController
-# from SRC.Controller.ESS_controller.essRLControlLib_DN import essController
+from Controller.ESS_controller.essRLControlLib import essController
 
-# RL agent
-from SRC.Controller.HVAC_controller.hvacRLControlLib import hvacController
-from .HVAC_controller.HVAC_RL_CONFIG import (HVAC_RL_AGENT,
+
+# RL agent HVAC controller import
+from Controller.HVAC_controller.hvacRLControlLib import hvacController
+from Controller.HVAC_controller.HVAC_RL_CONFIG import (HVAC_RL_AGENT,
                                              HVAC_INPUT_DIM, HVAC_LOOK_AHEAD,
                                              HVAC_MODEL_DIR, HVAC_MODEL_NAME)
 
@@ -47,7 +45,8 @@ class HEMSController:
                  ev_config: dict = None,
                  havc_update_period: timedelta = timedelta(minutes=15),
                  hvac_config: dict = None,
-                 mode='Train'):
+                 mode='Train',
+                 plotter= False):
         """
 
         :param name: name for the controller
@@ -80,7 +79,7 @@ class HEMSController:
                                               global_database=self.hems_database, mode=mode,
                                               max_charging_power=ev_config.get('charging power W', 7_000) / 1000,
                                               look_ahead=EV_LOOK_AHEAD,
-                                              enable_plotter=True)
+                                              enable_plotter=plotter)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if ev_tariff is None:
                 self.ev_controller.tariff_handler = meter_tariff
@@ -98,7 +97,7 @@ class HEMSController:
                                                                                        1000) / 1000,
                                                 look_ahead=ESS_LOOK_AHEAD,
                                                 energy_normalizer = self.ess_config.get('capacity Wh') / 1000,
-                                                enable_plotter=True,
+                                                enable_plotter=plotter,
                                                 trigger_time=[
                                                     time(0, 0),
                                                     # time(6, 0),
@@ -222,102 +221,6 @@ class HEMSController:
         # logger.commandline(control_signal)
         # return the generated signal
         return control_signal
-
-    def get_past_period_df(self, now_time, past_period: int = 24):  # hope this will handle the resolution as well
-        """
-        Return exactly N samples ending at now_time, where:
-          N = past_period(hours) / data_resolution
-
-        Example:
-          data_resolution = 1 minute, past_period=3 hours -> 180 rows
-        """
-
-        now_time = pd.Timestamp(now_time)
-        res = self.resolution  # e.g. 1 min
-        period = pd.Timedelta(hours=past_period)
-
-        # how many rows we expect
-        expected_len = int(period / res)  # 3h/1min = 180
-
-        # Ensure now_time is aligned to resolution grid (optional but helpful)
-        now_aligned = now_time.floor(res)
-
-        # Pull a window (a bit larger than needed) then trim by length
-        cutoff = now_aligned - period
-        recent = self.hems_logs.loc[cutoff:now_aligned]
-
-        if recent.empty:
-            logger.commandline("Fallback: no data in requested window")
-            return None
-
-        # Take exactly the last expected_len rows
-        if len(recent) < expected_len:
-            logger.commandline(f"Fallback: insufficient rows (need {expected_len}, got {len(recent)})")
-            return None
-
-        control_data = recent.tail(expected_len)
-
-        # ---- Optional strict checks ----
-        # 1) Must end at now_aligned
-        if control_data.index[-1] != now_aligned:
-            logger.commandline(f"Fallback: last timestamp is {control_data.index[-1]} not {now_aligned}")
-            return None
-
-        # 2) Must be continuous at resolution (no missing minutes)
-        expected_index = pd.date_range(
-            end=now_aligned, periods=expected_len, freq=res
-        )
-        if not control_data.index.equals(expected_index):
-            logger.commandline("Fallback: missing timestamps / irregular index in the last window")
-            return None
-
-        return control_data
-
-    def get_resampled(
-            self,
-            df_sample: pd.DataFrame,
-            resolution: timedelta,
-            headers: list[str],
-            agg: str = "mean",
-    ) -> pd.DataFrame | None:
-        """
-        Resample the DataFrame to a given resolution for specific headers.
-        Returns  extra value,
-
-        resolution : datetime.timedelta (e.g., timedelta(minutes=15))
-        headers    : list of column names to include
-        agg        : aggregation function ('mean', 'sum', 'max', 'min')
-        """
-
-        if df_sample is None or df_sample.empty:
-            return None
-
-        # ---- Validate datetime index ----
-        if not isinstance(df_sample.index, pd.DatetimeIndex):
-            raise ValueError("df_sample must have a DatetimeIndex for resampling")
-
-        # ---- Validate headers ----
-        missing = set(headers) - set(df_sample.columns)
-        if missing:
-            raise KeyError(f"Missing columns in df_sample: {missing}")
-
-        # ---- Convert timedelta to pandas frequency ----
-        freq = f"{int(resolution.total_seconds())}s"
-
-        # ---- Select requested headers only ----
-        df = df_sample[headers]
-
-        # ---- Apply aggregation ----
-        if agg == "mean":
-            return df.resample(freq).mean()
-        elif agg == "sum":
-            return df.resample(freq).sum()
-        elif agg == "max":
-            return df.resample(freq).max()
-        elif agg == "min":
-            return df.resample(freq).min()
-        else:
-            raise ValueError(f"Unsupported aggregation: {agg}")
 
     def save_models(self, episode=None):
         if episode is not None:

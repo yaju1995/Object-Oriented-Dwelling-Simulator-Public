@@ -1,17 +1,13 @@
 import numpy as np
-from SRC.Controller.ControlLib import controller
 from datetime import timedelta, datetime, time
-from SRC.SIM.EquipmentClass import InverterModel, EVModel, MeterModel, HVACModel
-
-from SRC.SIM.EquipmentClass import InverterModel
-from SRC.support.lib_config import CustomLogger
-from SRC.support.live_plotter import LivePlotter, LivePlotter4
-from SRC.Controller.DQNmodel.DQN_Agent import DQNAgent
+from Controller.ControlLib import controller
+from SIM.EquipmentClass import InverterModel, EVModel, MeterModel, HVACModel
+from support.lib_config import CustomLogger
+from support.live_plotter import LivePlotter, LivePlotter4
+from Controller.DQNmodel.DQN_Agent import DQNAgent
 
 logger = CustomLogger(command=False, color='green')
 
-
-# RL acon
 
 class hvacController(controller):
     def __init__(self, resolution: timedelta, global_database, update_period,look_ahead,

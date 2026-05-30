@@ -2,15 +2,13 @@ import pandas as pd
 import numpy as np
 from datetime import timedelta, datetime
 
-# from SRC.Controller.DDPGmodel.DDPG_Agent import DDPGAgent
-# from SRC.Controller.DDPGmodel.DDPG_Agent_n_step import DDPGAgent
-from SRC.Controller.DDPGmodel.DDPG_Agent_multistep import DDPGAgent
-from SRC.support.lib_config import CustomLogger
-from SRC.SIM.EquipmentClass import EVModel
-from SRC.Controller.Database.PandasDatabase import DataStore
-from SRC.support.live_plotter import LivePlotter4
 
-from SRC.SIM.Tariff.tariffHandler import tariffHandler
+from support.lib_config import CustomLogger
+from support.live_plotter import LivePlotter4
+
+from SIM.EquipmentClass import EVModel
+from Controller.Database.PandasDatabase import DataStore
+from SIM.Tariff.tariffHandler import tariffHandler
 
 ##############################
 logger = CustomLogger(command=False, color='green')

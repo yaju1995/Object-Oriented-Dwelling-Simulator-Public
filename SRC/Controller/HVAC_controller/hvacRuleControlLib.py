@@ -1,9 +1,7 @@
-from SRC.Controller.ControlLib import controller
 from datetime import datetime, timedelta
-from SRC.SIM.EquipmentClass import InverterModel, EVModel, MeterModel, HVACModel
-
-from SRC.SIM.EquipmentClass import InverterModel
-from SRC.support.lib_config import CustomLogger
+from Controller.ControlLib import controller
+from SIM.EquipmentClass import InverterModel, EVModel, MeterModel, HVACModel
+from support.lib_config import CustomLogger
 
 logger = CustomLogger(command=False, color='green')
 
@@ -16,14 +14,13 @@ class hvacController(controller):
         self.temp_ref = 22.5
         self.temp_deviation = 2
 
-
     def update_status(self, hvac_info: HVACModel):
         now_time = hvac_info.time
         next_time = now_time + self.resolution
         do_update = (next_time.minute % (self.update_period.total_seconds() // 60) == 0)
 
-        t_upper = self.temp_ref+self.temp_deviation
-        t_lower = self.temp_ref-self.temp_deviation
+        t_upper = self.temp_ref + self.temp_deviation
+        t_lower = self.temp_ref - self.temp_deviation
         if do_update:
 
             # HVAC control ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,4 +37,3 @@ class hvacController(controller):
                 self.set_HVAC_Power = None
 
             return self.set_HVAC_Power
-

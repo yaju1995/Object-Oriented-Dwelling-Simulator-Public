@@ -2,15 +2,12 @@ import pandas as pd
 import numpy as np
 from datetime import timedelta, datetime
 
-# from SRC.Controller.DDPGmodel.DDPG_Agent import DDPGAgent
-# from SRC.Controller.DDPGmodel.DDPG_Agent_n_step import DDPGAgent
-from SRC.Controller.DDPGmodel.DDPG_Agent_multistep import DDPGAgent
-from SRC.support.lib_config import CustomLogger
-from SRC.SIM.EquipmentClass import EVModel
-from SRC.Controller.Database.PandasDatabase import DataStore
-from SRC.support.live_plotter import LivePlotter4
-
-from SRC.SIM.Tariff.tariffHandler import tariffHandler
+from Controller.DDPGmodel.DDPG_Agent_multistep import DDPGAgent
+from support.lib_config import CustomLogger
+from SIM.EquipmentClass import EVModel
+from Controller.Database.PandasDatabase import DataStore
+from support.live_plotter import LivePlotter4
+from SIM.Tariff.tariffHandler import tariffHandler
 
 ##############################
 logger = CustomLogger(command=False, color='green')
@@ -104,9 +101,6 @@ class evController:
             self.multiPlotter = LivePlotter4(['Cost per kWh', 'Overall $/kwh', 'Final SOC', 'Reward'],
                                              xlabels=['Episode', 'Episode', 'Episode', 'Episode'],
                                              ylabels=['$/kWh', '$/kwh', 'SOC%', 'Reward'])
-        # self.plotter1 = LivePlotter('Cost per kWh', 'Episode', '$/kWh')
-        # self.plotter2 = LivePlotter('change SoC', 'Episode', 'SoC/min')
-        # self.plotter3 = LivePlotter('Final SOC', 'Episode', 'SOC')
 
     def update_status(self, ev_info: EVModel):
 
@@ -175,9 +169,7 @@ class evController:
                          self.total_ev_charging_cost / self.total_ev_charging_energy,
                          self.final_soc * 100,
                          self.avg_reward])
-                    # self.plotter1.update(self.ev_sessions_charging_cost / self.ev_sessions_charging_energy)
-                    # self.plotter2.update(soc_change_rate)
-                    # self.plotter3.update(self.final_soc*100)
+
                 summary = (
                     "\n===== EV Charging Session Summary =====\n"
                     f"Arrival time:    {self.connect_time}\n"
@@ -370,26 +362,6 @@ class evController:
         tariff = (tariff_states - tariff_min) / (tariff_max - tariff_min)  # Normalized over max and min
 
         W1 = self.weight_info()
-
-        # Get time
-        # control_minutes = control_time.hour * 60 + control_time.minute
-        # angle = 2 * np.pi * (control_minutes / (24 * 60))
-
-        # sin_time = np.sin(angle)
-        # cos_time = np.cos(angle)
-        #
-        # # time to full charge
-        # if self.connect_period is None:
-        #     connect_minutes = 0
-        # else:
-        #     connect_minutes = int(self.connect_period.total_seconds() // 60)
-        #
-        # connect_norm = connect_minutes / 1440  # ~0–1 given a 24 hrs
-
-        # Additional possible inputs: tariff, time of day, remaining time estimate ...
-        # Finalize the EV states
-        # Time of day min
-        # Weekday and weekend
         return np.array([soc, self.ev_status, W1, *tariff], dtype=float)
 
     def compute_reward(self):
@@ -403,12 +375,6 @@ class evController:
         Cost_penalty = -round(self.nom_period_charging_cost, 3)
 
         reward = W1 * SoC_penalty + (1 - W1) * Cost_penalty
-
-        # print(f'W1 = {W1}\n'
-        #       f'SOC_pen: {W1} * {SoC_penalty}\n'
-        #       f'Cost_pen = {1-W1} * {Cost_penalty}\n'
-        #       f'Reward = {reward}')
-        # Time connected so far (minutes)
 
         return reward
 
@@ -434,7 +400,7 @@ class evController:
 
     def save_model(self, path):
         # Ensure the directory exists
-        return(self.rl_agent.save(path))
+        return self.rl_agent.save(path)
 
     def load_model(self, path):
-        return(self.rl_agent.load(path))
+        return self.rl_agent.load(path)

@@ -1,4 +1,4 @@
-from SRC.Controller.DDPGmodel.DDPG_Agent_multistep import DDPGAgent, DDPGConfig
+from Controller.DDPGmodel.DDPG_Agent_multistep import DDPGAgent, DDPGConfig
 from torch import nn
 
 EV_DDPG_config = DDPGConfig()

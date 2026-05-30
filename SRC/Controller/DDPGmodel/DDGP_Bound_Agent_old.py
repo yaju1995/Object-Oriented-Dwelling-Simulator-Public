@@ -4,7 +4,7 @@ import torch.optim as optim
 import numpy as np
 import random
 
-from SRC.support.lib_config import CustomLogger
+from support.lib_config import CustomLogger
 
 logger = CustomLogger(False)
 

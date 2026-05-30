@@ -10,6 +10,7 @@ Models
 
 # Jupyter Notebook
 .ipynb_checkpoints
+**/.ipynb_checkpoints/
 
 # Environments
 .env

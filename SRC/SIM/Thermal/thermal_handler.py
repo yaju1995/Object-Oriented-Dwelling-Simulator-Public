@@ -1,6 +1,6 @@
 import math
 from datetime import timedelta
-
+from support.lib_config import CustomLogger
 
 class ThermalHandler:
     """

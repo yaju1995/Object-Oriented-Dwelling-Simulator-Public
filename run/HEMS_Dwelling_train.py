@@ -1,20 +1,20 @@
 
 import random
 from datetime import datetime, timedelta, time
-from SRC.SIM.Simulator import dwelling
-from SRC.SIM.Simulator_Config.config_list_train import (pv_config,
-                                                        ev_config,
+from SIM.Simulator import dwelling
+from SIM.Simulator_Config.config_list_train import (pv_config,
+                                                    ev_config,
                                                         thermal_config,
                                                         weather_file,
                                                         demand_config,
                                                         battery_config)
 
-from SRC.Controller.HEMSControlRL import HEMSController
-from SRC.SIM.Tariff.TariffGenerator import RandomTariffGenerator
+from Controller.HEMSControlRL import HEMSController
+from SIM.Tariff.TariffGenerator import RandomTariffGenerator
 
 RES = 60
 RESOLUTION = timedelta(minutes=RES)  # 1 min resolution info
-DURATION = timedelta(days=10000)
+DURATION = timedelta(days=10)
 START_TIME = datetime(2018, 1, 1)
 
 
@@ -107,5 +107,5 @@ print(f"Simulation took {duration:.4f} seconds")
 
 print(f'Final House Cost: {Controller.hems_database.df["Instant Cost"].sum()}')
 
-Controller.hems_database.df.to_csv('./Results/controller_train_EV_V2G.csv')
-House.simulation_df.to_csv('./Results/simulation_train_EV_V2G.csv')
+Controller.hems_database.df.to_csv('../Results/controller_train_EV_V2G.csv')
+House.simulation_df.to_csv('../Results/simulation_train_EV_V2G.csv')

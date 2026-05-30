@@ -1,47 +1,14 @@
 import pandas as pd
 import numpy as np
 from datetime import timedelta, datetime, time
-from SRC.support.lib_config import CustomLogger
-from SRC.Controller.Database.PandasDatabase import DataStore
-from SRC.SIM.EquipmentClass import InverterModel, MeterModel
-from SRC.support.live_plotter import LivePlotter, LivePlotter4
+from support.lib_config import CustomLogger
+from Controller.Database.PandasDatabase import DataStore
+from SIM.EquipmentClass import InverterModel, MeterModel
+from support.live_plotter import LivePlotter, LivePlotter4
 
-from SRC.Controller.ESS_controller.SafeLayer import soc_safety_layer
-
-from SRC.Controller.DDPGmodel.DDPG_Agent_multistep import DDPGAgent
-from SRC.Controller.DDPGmodel.bounded_DDPG_Agent_multistep import Bound_DDPGAgent
-from SRC.Controller.DDPGmodel.DDGP_Bound_Agent_old import DPGAgent
+from Controller.DDPGmodel.bounded_DDPG_Agent_multistep import Bound_DDPGAgent
 
 logger = CustomLogger(command=False, color='cyan')
-
-
-# def soc_charge_limit(state, resolution):
-#     # return np.array([-0.5]), np.array([0.5])
-#     soc = state[1]  # SOC should be 0 state
-#     #get C rating 0.5 -> unde charging resolution will be 0.5*res/60
-#     # for 15 min it will be 0.5/4 -> 0.125 soc limit
-#     # update max min limit with C rating and battery state
-#     # 1-soc
-#     charge_limit = 0.5
-#     discharge_limit = 0.5
-#
-#     energy_limit = 0.5 * resolution / 60 # energy limit
-#     if (1-soc) < energy_limit:
-#         charge_limit = (1 - soc) *  60/resolution
-#
-#     if soc-0.05 < energy_limit:
-#         discharge_limit = (soc-0.05) * 60/ resolution
-#
-#     return np.array([-discharge_limit]), np.array([charge_limit])
-
-
-# def no_limit(state):
-#     # return np.array([-0.5]), np.array([0.5])
-#     soc = state[1]  # SOC should be 0 state
-#
-#     charge_limit = min(0.5, 1 - soc)
-#     discharge_limit = min(0.5, soc - 0.05)
-#     return np.array([-0.5]), np.array([0.5])
 
 class essController:
     def __init__(self, rl_agent: Bound_DDPGAgent, mode='Train', resolution: timedelta = timedelta(minutes=1),

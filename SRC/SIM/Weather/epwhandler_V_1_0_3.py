@@ -7,7 +7,7 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-from SRC.support.lib_config import CustomLogger
+from support.lib_config import CustomLogger
 
 logger = CustomLogger(command=True)
 

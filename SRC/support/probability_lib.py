@@ -3,7 +3,7 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 from sklearn.mixture import GaussianMixture
 
-from SRC.support.lib_config import CustomLogger
+from support.lib_config import CustomLogger
 
 logger = CustomLogger(command=False)
 

@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from SRC.support.lib_config import CustomLogger
+from support.lib_config import CustomLogger
 
 logger = CustomLogger(command=False, color='Magenta')
 
