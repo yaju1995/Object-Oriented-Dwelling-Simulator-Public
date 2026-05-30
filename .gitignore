@@ -4,15 +4,7 @@
 **/.venv/
 .ideagit su
 .venv
-Analysis
-**/Analysis
-Trials
-**/Trials
-Result
-**/Result
-**/Results
-Backup
-**/Backup/
+
 
 Models
 
@@ -28,6 +20,31 @@ ENV/
 env.bak/
 venv.bak/
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+
 # IDE specific files
 .idea/
 .vscode/
@@ -36,4 +53,15 @@ venv.bak/
 
 # Project specific
 Test_Case
-Multagent Model
+**/Test_Case/
+Multagent Model/
+**/Multagent Model/
+Analysis
+**/Analysis/
+Trials/
+**/Trials/
+Result/
+**/Result/
+**/Results/
+Backup/
+**/Backup/
