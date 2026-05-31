@@ -1,6 +1,7 @@
 # Object-Oriented Dwelling Simulator
 
 A Python-based simulation framework for modeling and analyzing dwelling systems using object-oriented design principles. This project is designed for experimentation, simulation reproducibility, and structured analysis of dwelling-related scenarios.
+The simulation file is also integrated with Controller setup to have HEMS control, to control Energy storage system, Electric Vehicle and HVAC control.
 
 ---
 
@@ -16,7 +17,7 @@ A Python-based simulation framework for modeling and analyzing dwelling systems 
 ### 1. Create a virtual environment
 
 ```bash
-conda create -n OODS python=3.9.21
+conda create -n OODS python=3.10
 ```
 
 ### 2. Activate the environment
@@ -108,8 +109,8 @@ Object-Oriented-Dwelling-Simulator-Public/
 This project leverages object-oriented programming (OOP) to:
 
 * Model dwelling components as modular objects
-* Simulate interactions between entities
-* Enable reproducible experimental setups
+* Simulate residentail dwelling with unscheduable load, ESS, EV load and HVAC load
+* Cover dwelling simulator and Home Energy management controller, integrating ESS, EV and HVAC control
 * Provide a flexible framework for future extensions
 
 ---

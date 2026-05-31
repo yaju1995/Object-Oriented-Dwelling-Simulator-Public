@@ -336,9 +336,9 @@ class essController:
         actual_power = value.get('Battery Electric Power (kW)')
         error_Reward = 0
         # print(set_power, actual_power)
-        if round(set_power, 3) != round(actual_power, 3):
-            print(f'Unbalance: { round(set_power, 3)}!={round(actual_power, 3)} ')
-            logger.commandline(f'{set_power}!={actual_power} ')
+        if (round(set_power, 3) - round(actual_power, 3))>0.001:
+            # print(f'Unbalance: { round(set_power, 3)}!={round(actual_power, 3)} ')
+            # logger.commandline(f'{set_power}!={actual_power} ')
             error_Reward = -5
         # print(f'{period_power} {set_power}: Cost Reward: {cost} Error Reward {error_Reward} ')
         reward = cost + error_Reward

@@ -22,8 +22,10 @@ dependencies = [
     "notebook >= 7.0.0",
     "torch >= 2.2.0",
     "torchvision >= 0.17.0",
-    "torchaudio >= 2.2.0"
+    "torchaudio >= 2.2.0",
+    "tqdm >= 4.66.0"
 ]
+
 
 [tool.setuptools.packages.find]
 where = ["src"]
