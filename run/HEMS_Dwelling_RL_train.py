@@ -20,6 +20,8 @@ START_TIME = datetime(2018, 1, 1)
 
 
 SEED = 0
+random.seed(SEED)
+
 House = dwelling(name='Dwelling_1',
                  start_time=START_TIME,
                  resolution=RESOLUTION,
@@ -37,6 +39,8 @@ House.tariff.tariff_model = Tariff_gen
 House.tariff.feed_tariff_model = Tariff_gen
 House.tariff.generate_tariff()  # First Generate
 House.tariff.updated_tariff()  # Then Update
+
+# initialize house
 House.initialized_df()
 
 
@@ -56,16 +60,15 @@ control_signal = {}
 
 start = datetime.now()
 
-# Controller.load_models()
-random.seed(SEED)
-# Controller.load_models(episode=1000)
+
+
 day = 0
 # Running a training loop
 while current_time <= end_time-RESOLUTION:
 
-    inverter, meter, ev, hvac, status = House.step(control_signal)
+    inverter, meter, ev, hvac, status = House.step(control_signal) # step return house info
+    
     # geting perfect future value
-
     Demand = House.simulation_df.loc[current_time+RESOLUTION, "Demand Electric Power (kW)"] # next period
     Generation = House.simulation_df.loc[current_time+RESOLUTION, "PV Electric Power (kW)"] # next period
 
@@ -80,9 +83,10 @@ while current_time <= end_time-RESOLUTION:
 
     current_time += RESOLUTION
     if current_time.time() == time(12, 00):
-        House.tariff.generate_tariff()
+        House.tariff.generate_tariff() # generating new tariff for next day at 12.00 pm 
+    
     elif current_time.time() == time(0, 0):
-        House.tariff.updated_tariff()
+        House.tariff.updated_tariff() # updating next day tariff
         # update the SOC external for training
         next_soc = House.Battery.set_soc(random.uniform(0.05, 1)) # reset that will occur
         day +=1
@@ -94,9 +98,7 @@ while current_time <= end_time-RESOLUTION:
         bar = '█' * int(percent / 5) + '-' * (20 - int(percent / 5))
         print(f"\rSeed {SEED} |{bar}| {percent:.1f}% completed ::{day}:: {Controller.ess_controller.avg_reward}", end="")
 
-
-
-
+    # saving all policy [model] at required eps 
     if day in (500, 1000, 2000, 3000, 4000, 5000,6000, 7000, 8000, 9000,10000):
         Controller.save_models(day)
 
@@ -104,8 +106,7 @@ end = datetime.now()
 duration = (end - start).total_seconds()
 
 print(f"Simulation took {duration:.4f} seconds")
-
-print(f'Final House Cost: {Controller.hems_database.df["Instant Cost"].sum()}')
+# print(f'Final House Cost: {Controller.hems_database.df["Instant Cost"].sum()}')
 
 Controller.hems_database.df.to_csv('../Results/controller_train_EV_V2G.csv')
 House.simulation_df.to_csv('../Results/simulation_train_EV_V2G.csv')

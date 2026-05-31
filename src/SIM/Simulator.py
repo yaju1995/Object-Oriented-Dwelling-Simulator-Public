@@ -94,7 +94,7 @@ class dwelling:
             model = self.demand_config.get('model')
             if model == 'default':
                 model = 'normal'
-                file_path = './SRC/SIM/Defaults/Demand/15_min_normal_test.csv'
+                file_path = './src/SIM/Defaults/Demand/15_min_normal_test.csv'
             else:
                 file_path = self.demand_config.get('file')
 
