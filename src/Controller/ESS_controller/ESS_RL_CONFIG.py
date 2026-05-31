@@ -19,7 +19,7 @@ ESS_INPUT_DIM = 2 + ESS_LOOK_AHEAD*2  # try to match the observed state with del
 ESS_OUT_DIM = 1
 
 
-ESS_MODEL_DIR = f'../Models/ESS/Train_5kWh_0_5C/SAFE_DDPG_N_step_{ESS_DDPG_config.n_step}Y_100_RES_60mins_SEED{ESS_DDPG_config.seed}'
+ESS_MODEL_DIR = f'./Models/ESS/Train_5kWh_0_5C/SAFE_DDPG_N_step_{ESS_DDPG_config.n_step}Y_100_RES_60mins_SEED{ESS_DDPG_config.seed}'
 # ESS_MODEL_DIR = f'../Models/ESS/old FW_60minsC'
 ESS_MODEL_NAME = f'seed_{ESS_DDPG_config.seed}.pth'
 

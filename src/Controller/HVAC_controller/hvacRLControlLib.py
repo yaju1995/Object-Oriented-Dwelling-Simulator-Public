@@ -45,6 +45,7 @@ class hvacController(controller):
         self.enable_plotter = enable_plotter
         self.no_sim = 0
         self.sum_reward = 0
+        self.avg_reward = 0
         if self.enable_plotter:
             self.live_plotter = LivePlotter4(titles=['Cum Reward', 'Avg Reward', 'Loss', 'Epsilon', ],
                                              xlabels=['Eps', 'Eps', 'Eps', 'Eps'],
@@ -111,12 +112,13 @@ class hvacController(controller):
                     if losses:
                         loss = losses.get('loss')
                         eps = losses.get('eps')
+                        self.sum_reward += self.cumulative_reward
+                        self.avg_reward = self.sum_reward / self.no_sim
                         if self.enable_plotter:  # only plot after 24 hrs or something
 
-                            self.sum_reward += self.cumulative_reward
-                            avg_reward = self.sum_reward / self.no_sim
+                            
                             self.live_plotter.update([self.cumulative_reward,
-                                                      avg_reward,
+                                                      self.avg_reward,
                                                       loss,
                                                       eps,
                                                       ])

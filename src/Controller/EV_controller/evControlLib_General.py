@@ -252,7 +252,7 @@ class evController:
             self.control_logic(next_time, False)  # Update charging power using controller
             # if fully charged it return, no action and reset all
 
-            self.set_charging_power = self.action * self.max_charging_power
+            self.set_charging_power = self.action.item() * self.max_charging_power
 
             # Reset period accumulators
             # logger.commandline(f'period charging cost: {self.period_charging_cost}')

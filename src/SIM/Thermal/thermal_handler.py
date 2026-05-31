@@ -52,7 +52,7 @@ class ThermalHandler:
         """
         Advance one timestep.
         """
-
+        # print(external_temperature, power_W, self.n, self.W)
         T_eq = external_temperature - (power_W * self.n) / self.W
 
         self.internal_temperature = (

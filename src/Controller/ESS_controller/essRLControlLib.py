@@ -149,7 +149,8 @@ class essController:
         if do_update:  # every 15 or 30 mins update 60 mins
             self.control_logic(next_time, done)  # next time period is the control time period
             if self.action is not None:
-                self.set_battery_power = round(float(self.action) * self.energy_normalizer, 3)
+                # print(self.action)
+                self.set_battery_power = round(float(self.action.item()) * self.energy_normalizer, 3)
             else:
                 self.set_battery_power = self.action
             # states = self.get_state(now_time)

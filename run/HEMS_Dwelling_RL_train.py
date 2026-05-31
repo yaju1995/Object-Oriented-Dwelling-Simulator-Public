@@ -14,7 +14,7 @@ from SIM.Tariff.TariffGenerator import RandomTariffGenerator
 
 RES = 60
 RESOLUTION = timedelta(minutes=RES)  # 1 min resolution info
-DURATION = timedelta(days=10)
+DURATION = timedelta(days=500)
 START_TIME = datetime(2018, 1, 1)
 
 
@@ -27,11 +27,11 @@ House = dwelling(name='Dwelling_1',
                  resolution=RESOLUTION,
                  duration=DURATION,
                  demand_config=demand_config,
-                 weather_file=None,
+                 weather_file=weather_file,
                  pv_config=pv_config,
                  battery_config=battery_config,
-                 ev_config=None,
-                 thermal_config=None,
+                 ev_config=ev_config,
+                 thermal_config=thermal_config,
                  seed=SEED)
 
 Tariff_gen = RandomTariffGenerator(low=0.1, high=0.4, resolution=timedelta(minutes=RES), seed=SEED)
@@ -96,7 +96,10 @@ while current_time <= end_time-RESOLUTION:
         if day == 1000:  # force 100% at the end
             percent = 100
         bar = '█' * int(percent / 5) + '-' * (20 - int(percent / 5))
-        print(f"\rSeed {SEED} |{bar}| {percent:.1f}% completed ::{day}:: {Controller.ess_controller.avg_reward}", end="")
+        print(f"\rSeed {SEED} |{bar}| {percent:.1f}% completed ::Days {day} || "
+              f"ESS average Reward:{Controller.ess_controller.avg_reward} || "
+              f"EV average Reward:{Controller.ev_controller.avg_reward} || "
+              f"HVAC average Reward:{Controller.hvac_controller.avg_reward}", end="")
 
     # saving all policy [model] at required eps 
     if day in (500, 1000, 2000, 3000, 4000, 5000,6000, 7000, 8000, 9000,10000):
@@ -108,5 +111,5 @@ duration = (end - start).total_seconds()
 print(f"Simulation took {duration:.4f} seconds")
 # print(f'Final House Cost: {Controller.hems_database.df["Instant Cost"].sum()}')
 
-Controller.hems_database.df.to_csv('../Results/controller_train_EV_V2G.csv')
-House.simulation_df.to_csv('../Results/simulation_train_EV_V2G.csv')
+Controller.hems_database.df.to_csv('./Results/controller_train_EV_V2G.csv')
+House.simulation_df.to_csv('./Results/simulation_train_EV_V2G.csv')

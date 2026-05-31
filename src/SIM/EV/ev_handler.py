@@ -8,7 +8,7 @@ from SIM.ESS.ess_handler import ESSHandler
 from support.lib_config import CustomLogger
 from SIM.EV.ev_profile_generator import generate_ev_sessions
 
-logger = CustomLogger(command=True)
+logger = CustomLogger(command=False)
 
 
 class EVHandler(ESSHandler):
