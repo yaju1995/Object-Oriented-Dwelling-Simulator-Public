@@ -104,5 +104,5 @@ print(f"Simulation took {duration:.4f} seconds")
 print(f'Final House Cost: $ {Controller.hems_database.df["Instant Cost"].sum()}')
 
 # check the dir 
-Controller.hems_database.df.to_csv('./Results/controller_RULE.csv')
-House.simulation_df.to_csv('./Results/simulation_RULE.csv')
+Controller.hems_database.df.to_csv('../Results/controller_RULE.csv')
+House.simulation_df.to_csv('../Results/simulation_RULE.csv')
